@@ -1,9 +1,6 @@
 package com.hodolog.api.domain;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -21,9 +18,15 @@ public class Post {
     @Lob
     public String content;
 
+    @Builder
     public Post(String title, String content) {
         this.title = title;
         this.content = content;
     }
+
+   /* public String getTitle() {
+        // 서비스의 정책을 넣지마세요!!! 절대!!!
+        return  this.title.substring(0, 10);
+    }*/
 }
 
