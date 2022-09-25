@@ -3,6 +3,7 @@ package com.hodolog.api.service;
 import com.hodolog.api.domain.Post;
 import com.hodolog.api.repository.PostRepository;
 import com.hodolog.api.request.PostCreate;
+import com.hodolog.api.request.PostSearch;
 import com.hodolog.api.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,18 +53,23 @@ public class PostService {
     // DB -> 어플리케이션 서버로 전달하는 시간, 트래픽비용 등이 많이 발생할 수 있다.
 
 
-    public List<PostResponse> getList(Pageable pageable) {
+    /*public List<PostResponse> getList(Pageable pageable) {
         // web -> page 1 -> 0 (내부적으로 바꿈)
-
 
         //Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC,"id"));
 
         return postRepository.findAll(pageable).stream()
-               /* .map(post -> PostResponse.builder()
+               *//* .map(post -> PostResponse.builder()
                         .id(post.getId())
                         .title(post.getTitle())
                         .content(post.getContent())
-                        .build())*/
+                        .build())*//*
+                .map(PostResponse::new)
+                .collect(Collectors.toList());
+    }*/
+
+    public List<PostResponse> getList(PostSearch postSearch) {
+        return postRepository.getList(postSearch).stream()
                 .map(PostResponse::new)
                 .collect(Collectors.toList());
     }

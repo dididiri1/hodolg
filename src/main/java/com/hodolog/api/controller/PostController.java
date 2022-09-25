@@ -3,6 +3,7 @@ package com.hodolog.api.controller;
 
 import com.hodolog.api.domain.Post;
 import com.hodolog.api.request.PostCreate;
+import com.hodolog.api.request.PostSearch;
 import com.hodolog.api.response.PostResponse;
 import com.hodolog.api.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -55,9 +56,13 @@ public class PostController {
     // 조회 API
     // 지난 시간 = 단건 조회 API (1개의 글을 Post 가져오는 기능
     // 이번 시간 = 여러개의 글을 조회 API
-
-    @GetMapping("/posts")
+    /*@GetMapping("/posts")
     public List<PostResponse> getList(@PageableDefault(size = 5) Pageable pageable) {
         return postService.getList(pageable);
+    }*/
+
+    @GetMapping("/posts")
+    public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
+        return postService.getList(postSearch);
     }
 }
