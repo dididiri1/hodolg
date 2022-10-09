@@ -1,24 +1,25 @@
 package com.hodolog.api.service;
 
 import com.hodolog.api.domain.Post;
+import com.hodolog.api.exception.PostNotFound;
 import com.hodolog.api.repository.PostRepository;
 import com.hodolog.api.request.PostCreate;
+import com.hodolog.api.request.PostEdit;
 import com.hodolog.api.request.PostSearch;
 import com.hodolog.api.response.PostResponse;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -128,4 +129,105 @@ class PostServiceTest {
 
     }
 
+    @Test
+    @DisplayName("글 제목 수정")
+    void test4() {
+        // given(준비)
+        Post post = Post.builder()
+                 .title("호돌맨")
+                 .content("반포자이")
+                 .build();
+
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("호돌걸")
+                .content("반포자이")
+                .build();
+
+        // when(실행)
+        postService.edit(post.getId(), postEdit);
+
+        // then(검증)
+        Post changedPost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + post.getId()));
+        assertEquals("호돌걸", changedPost.getTitle());
+        assertEquals("반포자이", changedPost.getContent());
+
+
+    }
+
+    @Test
+    @DisplayName("게시글 삭제")
+    void test5() {
+        // given(준비)
+
+        Post post = Post.builder()
+                .title("호돌맨")
+                .content("반포자이")
+                .build();
+        postRepository.save(post);
+
+        // when
+        postService.delete(post.getId());
+
+        // then
+        assertEquals(0, postRepository.count());
+    }
+
+    @Test
+    @DisplayName("글 1개 조회 - 존재하지 않는 글")
+    void test6() {
+        // given(준비)
+        Post post = Post.builder()
+                .title("호돌맨")
+                .content("반포자이").build();
+        postRepository.save(post);
+
+        // expected
+        assertThrows(PostNotFound.class, () ->{
+            postService.get(post.getId() + 1L);
+        });
+
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 - 존재하지 않는 글")
+    void test7() {
+        // given(준비)
+
+        Post post = Post.builder()
+                .title("호돌맨")
+                .content("반포자이")
+                .build();
+        postRepository.save(post);
+
+        // expected
+        assertThrows(PostNotFound.class, () ->{
+            postService.delete(post.getId() + 1L);
+        });
+    }
+
+    @Test
+    @DisplayName("글 제목 수정 - 존재하지 않는 글")
+    void test8() {
+        // given(준비)
+        Post post = Post.builder()
+                .title("호돌맨")
+                .content("반포자이")
+                .build();
+
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("호돌걸")
+                .content("반포자이")
+                .build();
+
+        // expected
+        assertThrows(PostNotFound.class, () ->{
+            postService.edit(post.getId()  + 1L, postEdit);
+        });
+
+    }
 }
