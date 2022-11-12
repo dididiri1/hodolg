@@ -7,7 +7,6 @@ import com.hodolog.api.request.PostCreate;
 import com.hodolog.api.request.PostEdit;
 import com.hodolog.api.request.PostSearch;
 import com.hodolog.api.response.PostResponse;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -125,8 +124,6 @@ class PostServiceTest {
         // then(검증)
         assertEquals(10L, posts.size());
         assertEquals("호돌맨 제목 19", posts.get(0).getTitle());
-
-
     }
 
     @Test
@@ -221,7 +218,7 @@ class PostServiceTest {
 
         PostEdit postEdit = PostEdit.builder()
                 .title("호돌걸")
-                .content("반포자이")
+                .content("초가집")
                 .build();
 
         // expected
@@ -230,4 +227,6 @@ class PostServiceTest {
         });
 
     }
+
+
 }
